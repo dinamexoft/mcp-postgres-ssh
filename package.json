@@ -1,0 +1,20 @@
+{
+  "name": "mcp-postgres-ssh",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "MCP server for Postgres via SSH",
+  "main": "server.js",
+  "bin": {
+    "mcp-postgres-ssh": "./server.js"
+  },
+  "scripts": {
+    "start": "node --env-file=.env server.js"
+  },
+  "dependencies": {
+    "pg": "^8.23.0",
+    "ssh2": "^1.17.0"
+  },
+  "volta": {
+    "node": "24.20.0"
+  }
+}
