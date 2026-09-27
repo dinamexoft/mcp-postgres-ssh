@@ -1,8 +1,29 @@
 {
   "name": "mcp-postgres-ssh",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "description": "MCP server for Postgres via SSH",
+  "author": {
+    "name": "pavelety",
+    "url": "https://dinamexoft.com",
+    "githubUsername": "pavelety"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dinamexoft/mcp-postgres-ssh.git"
+  },
+  "homepage": "https://github.com/dinamexoft/mcp-postgres-ssh#readme",
+  "bugs": {
+    "url": "https://github.com/dinamexoft/mcp-postgres-ssh/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "postgres",
+    "ssh",
+    "claude"
+  ],
   "main": "server.js",
   "bin": {
     "mcp-postgres-ssh": "server.js"
