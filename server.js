@@ -31,11 +31,45 @@ if (envFileFlagIndex !== -1) {
   loadEnvFile(envFilePath);
 }
 
+const USAGE = `Usage: mcp-postgres-ssh --env-file <path/to/.env>
+
+Required variables in that env file (see README.md section 3):
+  SSH_HOST      SSH host to tunnel through
+  SSH_USER      SSH username on that host
+  SSH_KEY       path to the SSH private key
+  DB_USER       Postgres user
+  DB_PASSWORD   Postgres password
+
+Optional:
+  SSH_PORT        (default 22)
+  REMOTE_DB_HOST  (default 127.0.0.1)
+  REMOTE_DB_PORT  (default 5432)
+  DB_NAME         (default postgres)`;
+
+function fail(message) {
+  console.error(`[Config error] ${message}\n\n${USAGE}`);
+  process.exit(1);
+}
+
+const REQUIRED_ENV_VARS = ['SSH_HOST', 'SSH_USER', 'SSH_KEY', 'DB_USER', 'DB_PASSWORD'];
+for (const name of REQUIRED_ENV_VARS) {
+  if (!process.env[name]) {
+    fail(`Missing required environment variable ${name}. Set it in the env file passed to --env-file, or export it before running.`);
+  }
+}
+
+let sshPrivateKey;
+try {
+  sshPrivateKey = fs.readFileSync(process.env.SSH_KEY);
+} catch (e) {
+  fail(`Could not read SSH_KEY at "${process.env.SSH_KEY}": ${e.message}`);
+}
+
 const CONFIG = {
   sshHost: process.env.SSH_HOST,
   sshPort: parseInt(process.env.SSH_PORT || '22'),
   sshUsername: process.env.SSH_USER,
-  sshPrivateKey: fs.readFileSync(process.env.SSH_KEY),
+  sshPrivateKey,
   remoteDbHost: process.env.REMOTE_DB_HOST || '127.0.0.1',
   remoteDbPort: parseInt(process.env.REMOTE_DB_PORT || '5432'),
   dbUser: process.env.DB_USER,
@@ -172,7 +206,7 @@ async function handleRequest(request) {
         result: {
           protocolVersion: '2024-11-05',
           capabilities: {tools: {}},
-          serverInfo: {name: 'mcp-postgres-ssh', version: '1.0.0'},
+          serverInfo: {name: 'mcp-postgres-ssh', version: '1.1.0'},
         },
       });
     } else if (method === 'tools/list') {
