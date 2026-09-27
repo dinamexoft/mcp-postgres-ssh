@@ -5,7 +5,7 @@
   "description": "MCP server for Postgres via SSH",
   "main": "server.js",
   "bin": {
-    "mcp-postgres-ssh": "./server.js"
+    "mcp-postgres-ssh": "server.js"
   },
   "scripts": {
     "start": "node --env-file=.env server.js"
