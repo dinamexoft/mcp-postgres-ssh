@@ -57,13 +57,31 @@ ssh-keygen -t ed25519 -f "$env:USERPROFILE\.ssh\myproject_dev_mcp_postgres_ssh" 
 
 Copy the **public** key to the server:
 
+On the remote:
 ```bash
-ssh-copy-id -i ~/.ssh/myproject_dev_mcp_postgres_ssh.pub mcp_tunnel@your-ssh-host
+nano /home/mcp_tunnel/.ssh/authorized_keys
 ```
 
-(or manually append `myproject_dev_mcp_postgres_ssh.pub`'s contents to `/home/mcp_tunnel/.ssh/authorized_keys` on the
-server, `chmod 600` it, `chown mcp_tunnel:mcp_tunnel` the `.ssh` dir).
+Windows:
 
+```powershell
+Get-Content $env:USERPROFILE\.ssh\myproject_dev_mcp_postgres_ssh.pub | Set-Clipboard
+```
+
+Linux/macOS:
+
+```bash
+cat ~/.ssh/myproject_dev_mcp_postgres_ssh.pub | pbcopy
+```
+
+On the remote:
+
+```bash
+# paste, save & exit
+chmod 600 /home/mcp_tunnel/.ssh/authorized_keys
+chown -R mcp_tunnel:mcp_tunnel /home/mcp_tunnel/.ssh
+nano /etc/ssh/sshd_config
+```
 Restrict this user to port-forwarding only, no shell — add this in `/etc/ssh/sshd_config` (or a `Match User` block):
 
 ```
@@ -74,7 +92,11 @@ Match User mcp_tunnel
     ForceCommand /usr/sbin/nologin
 ```
 
-Reload sshd: `sudo systemctl reload sshd`.
+Reload sshd:
+
+```bash
+sudo systemctl reload sshd
+```
 
 ## 3. Client install
 
